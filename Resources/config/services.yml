@@ -1,0 +1,17 @@
+services:
+    checkdomain_upload_manager.form.type.upload:
+        class: Checkdomain\UploadManagerBundle\Form\Type\UploadType
+        tags:
+            - { name: form.type, alias: upload }
+    upload_manager.finder:
+        class: Symfony\Component\Finder\Finder
+        scope: prototype
+    upload_manager:
+        class: Checkdomain\UploadManagerBundle\Service\UploadManager
+        scope: prototype
+        calls:
+            - [ setFilesystem, [ @filesystem ] ]
+            - [ setFinder, [ @upload_manager.finder ] ]
+            - [ setWriteTo, [ %upload_manager.write_to% ] ]
+            - [ setUploadPath, [ %upload_manager.upload_path% ] ]
+            - [ setTempUploadPath, [ %upload_manager.temp_upload_path% ] ]
