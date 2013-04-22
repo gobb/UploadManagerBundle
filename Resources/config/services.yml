@@ -1,6 +1,7 @@
 services:
     checkdomain_upload_manager.form.type.upload:
         class: Checkdomain\UploadManagerBundle\Form\Type\UploadType
+        arguments: [ @service_container ]
         tags:
             - { name: form.type, alias: upload }
     upload_manager.finder:

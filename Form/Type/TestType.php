@@ -9,7 +9,10 @@ class TestType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('test', 'upload', array());
+        $builder->add('test', 'upload', array(
+            'upload_url' => 'HI',
+            'upload_dir' => '/feel/me/not/sexy/'
+        ));
     }
     
     public function getName()

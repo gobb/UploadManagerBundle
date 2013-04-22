@@ -358,7 +358,7 @@ class UploadManager
         $finder = $this->getFinder()
                        ->in($this->getAbsoluteUploadPath())
                        ->depth('< 1')
-                       ->notContains('/^[\.]/')
+                       //->notContains('/^[\.]/')
                        ->files();
         
         $files = array();
