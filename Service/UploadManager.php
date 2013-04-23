@@ -6,6 +6,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
 use Checkdomain\UploadManagerBundle\Exception\InstanceAlreadyExistsException;
+use Checkdomain\UploadManagerBundle\Exception\InstanceNotFoundException;
 
 class UploadManager
 {
@@ -261,7 +262,7 @@ class UploadManager
             throw new InstanceNotFoundException();
         }
         
-        return json_decode(file_get_contents($file));
+        return json_decode(file_get_contents($file), TRUE);
     }
     
     /**
@@ -330,7 +331,20 @@ class UploadManager
     }
     
     /**
-     * Remove a file in the temporary directory
+     * Removes a temporary file
+     * 
+     * @param string $file
+     */
+    public function removeTempFile($file)
+    {
+        $filesystem = $this->getFilesystem();
+        $filesystem->remove($this->getAbsoluteTempUploadPath() . '/' . $file);
+        
+        return $this;
+    }
+    
+    /**
+     * Removes a file
      * 
      * @param string $file
      */
@@ -341,6 +355,26 @@ class UploadManager
         if (array_search($file, $data['removed_files']) === FALSE)
         {
             $data['removed_files'][] = $file;
+        }
+        
+        $this->setData($data);
+        
+        return $this;
+    }
+    
+    /**
+     * Restore a temporary removed file
+     * 
+     * @param string $file
+     * @return \Checkdomain\UploadManagerBundle\Service\UploadManager
+     */
+    public function restoreFile($file)
+    {
+        $data = $this->getData();
+        
+        if (($key = array_search($file, $data['removed_files'])) !== FALSE)
+        {
+            unset($data['removed_files'][$key]);
         }
         
         $this->setData($data);

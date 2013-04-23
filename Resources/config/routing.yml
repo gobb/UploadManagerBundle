@@ -1,3 +1,7 @@
 checkdomain_upload_manager_homepage:
     pattern:  /hello/
     defaults: { _controller: CheckdomainUploadManagerBundle:Default:index }
+
+checkdomain_upload_manager_default:
+    resource: "@CheckdomainUploadManagerBundle/Controller/UploadController.php"
+    type: annotation
