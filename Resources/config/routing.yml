@@ -1,6 +1,10 @@
 checkdomain_upload_manager_homepage:
     pattern:  /hello/
     defaults: { _controller: CheckdomainUploadManagerBundle:Default:index }
+    
+checkdomain_uploadmanager_homepage_upload:
+    pattern:  /upload/
+    defaults: { _controller: CheckdomainUploadManagerBundle:Default:upload, _format: json }
 
 checkdomain_upload_manager_default:
     resource: "@CheckdomainUploadManagerBundle/Controller/UploadController.php"

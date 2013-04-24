@@ -2,73 +2,68 @@
 {% spaceless %}
     {% if read_only %}
 {% endif %}
-    {% javascripts
-        'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js'
-        '@CheckdomainUploadManagerBundle/Resources/public/js/*'
-    %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
     <script type="text/javascript">
         $(document).ready(function(){
-            $('[name="{{ name }}"]').uploadmanager();
+            $('.cd-uploadmanager[data-upload-id="{{ value }}"]').uploadmanager();
         });
     </script>
-    <script type="text/template" data-upload-id="{{ value }}" data-upload-template="existing-item">
-        <li data-upload-file="" class="existing-file">
-            <div class="file-name"></div>
-            <div class="extended">
-                <a href="#delete">
-                    <i class="icon-trash"></i>
-                    Delete
-                </a>
-            </div>
-        </li>
-    </script>
-    <script type="text/template" data-upload-id="{{ value }}" data-upload-template="added-item">
-        <li data-upload-file="" class="added-file">
-            <div class="file-name"></div>
-            <div class="extended">
-                <a href="#delete">
-                    <i class="icon-trash"></i>
-                    Delete
-                </a>
-            </div>
-        </li>
-    </script>
-    <script type="text/template" data-upload-id="{{ value }}" data-upload-template="process-item">
-        <li class="process-file">
-            <div class="file-name"></div>
-            <div class="extended">
-                <i class="icon-spinner icon-spin"></i>
-                <span></span>
-            </div>
-        </li>
-    </script>
-    <script type="text/template" data-upload-id="{{ value }}" data-upload-template="removed-item">
-        <li data-upload-file="" class="removed-file">
-            <div class="file-name"></div>
-            <div class="extended">
-                <a href="#restore">
-                    <i class="icon-reply"></i>
-                    Restore
-                </a>
-            </div>
-        </li>
-    </script>
-    <div>
+    <div class="cd-uploadmanager clearfix" data-upload-url="{{ upload_url }}" data-upload-actions="{{ upload_actions }}" data-upload-id="{{ value }}">
+        <script type="text/template" data-upload-template="existing-item">
+            <li data-upload-file="" class="existing-file clearfix">
+                <div class="file-name"></div>
+                <div class="extended">
+                    <a href="#delete">
+                        <i class="icon-trash"></i>
+                        Delete
+                    </a>
+                </div>
+            </li>
+        </script>
+        <script type="text/template" data-upload-template="added-item">
+            <li data-upload-file="" class="added-file clearfix">
+                <div class="file-name"></div>
+                <div class="extended">
+                    <a href="#delete">
+                        <i class="icon-trash"></i>
+                        Delete
+                    </a>
+                </div>
+            </li>
+        </script>
+        <script type="text/template" data-upload-template="process-item">
+            <li class="process-file clearfix">
+                <div class="file-name"></div>
+                <div class="extended">
+                    <i class="icon-spinner icon-spin"></i>
+                    <span></span>
+                </div>
+            </li>
+        </script>
+        <script type="text/template" data-upload-template="removed-item">
+            <li data-upload-file="" class="removed-file clearfix">
+                <div class="file-name"></div>
+                <div class="extended">
+                    <a href="#restore">
+                        <i class="icon-reply"></i>
+                        Restore
+                    </a>
+                </div>
+            </li>
+        </script>
         
-        <input data-upload-id="{{ value }}" type="file" id="{{ id }}" {% if disabled %} disabled="disabled"{% endif %} multiple="multiple" />
-        <input type="hidden" data-upload-url="{{ upload_url }}" name="{{ name }}" value="{{ value }}" />
+        <a href="javascript:void(0);" class="btn-upload"><i class="icon-folder-open-alt"></i></a>
+        <input type="file" id="{{ id }}" {% if disabled %} disabled="disabled"{% endif %} multiple="multiple" />
+        <input type="hidden" name="{{ name }}" value="{{ value }}" />
 
         <ul class="unstyled">
             <li>
-                <ul data-upload-id="{{ value }}" data-upload-list="existing">
+                <ul data-upload-list="existing">
                     {% for file in files.existing %}
-                        <li data-upload-file="{{ file }}" class="existing-file">
+                        <li data-upload-file="{{ file }}" class="existing-file clearfix">
                             <div class="file-name">{{ file|split('-', 2).1 }}</div>
                             <div class="extended">
                                 <a href="#delete">
-                                    <i class="icon-delete"></i>
+                                    <i class="icon-trash"></i>
                                     Delete
                                 </a>
                             </div>
@@ -77,13 +72,13 @@
                 </ul>
             </li>
             <li>
-                <ul data-upload-id="{{ value }}" data-upload-list="added">
+                <ul data-upload-list="added">
                     {% for file in files.added %}
-                        <li data-upload-file="{{ file }}" class="added-file">
+                        <li data-upload-file="{{ file }}" class="added-file clearfix">
                             <div class="file-name">{{ file|split('-', 2).1 }}</div>
                             <div class="extended">
                                 <a href="#delete">
-                                    <i class="icon-delete"></i>
+                                    <i class="icon-trash"></i>
                                     Delete
                                 </a>
                             </div>
@@ -92,13 +87,13 @@
                 </ul>
             </li>
             <li>
-                <ul data-upload-id="{{ value }}" data-upload-list="removed">
+                <ul data-upload-list="removed">
                     {% for file in files.deleted %}
-                        <li data-upload-file="{{ file }}" class="removed-file">
+                        <li data-upload-file="{{ file }}" class="removed-file clearfix">
                             <div class="file-name">{{ file|split('-', 2).1 }}</div>
                             <div class="extended">
                                 <a href="#restore">
-                                    <i class="icon-removed"></i>
+                                    <i class="icon-reply"></i>
                                     Restore
                                 </a>
                             </div>

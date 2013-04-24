@@ -4,6 +4,11 @@ namespace Checkdomain\UploadManagerBundle\Service;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Validator\Validator;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
+use Symfony\Component\Validator\Constraints\NotNull as NotNullConstraint;
+use Symfony\Component\Validator\Constraints\Collection as CollectionConstraint;
 
 use Checkdomain\UploadManagerBundle\Exception\InstanceAlreadyExistsException;
 use Checkdomain\UploadManagerBundle\Exception\InstanceNotFoundException;
@@ -25,6 +30,11 @@ class UploadManager
      * @var \Symfony\Component\Finder\Finder
      */
     protected $finder = NULL;
+    
+    /**
+     * @var \Symfony\COmponent\Validator\Validator
+     */
+    protected $validator = NULL;
 
     // Configuration
     protected $write_to = NULL;
@@ -36,6 +46,9 @@ class UploadManager
     
     // JSON data
     protected $data = NULL;
+    
+    // Validators
+    protected $constraints = array();
 
     /**
      * Create an new instance
@@ -143,6 +156,28 @@ class UploadManager
     }
     
     /**
+     * Set validator service
+     * 
+     * @param \Symfony\Component\Validator\Validator $validator
+     * @return \Checkdomain\UploadManagerBundle\Service\UploadManager
+     */
+    public function setValidator(Validator $validator)
+    {
+        $this->validator = $validator;
+        return $this;
+    }
+    
+    /**
+     * Get validator service
+     * 
+     * @return type
+     */
+    public function getValidator()
+    {
+        return $this->validator;
+    }
+    
+    /**
      * Set "write_to" option
      * 
      * @param string $write_to
@@ -162,6 +197,26 @@ class UploadManager
     public function getWriteTo()
     {
         return $this->write_to;
+    }
+    
+    /**
+     * Set file constraints
+     */
+    public function setConstraints(array $constraints)
+    {
+        // Add NOT_NULL constraint
+        $constraints[] = new NotNullConstraint();
+        
+        $this->constraints = $constraints;
+        return $this;
+    }
+    
+    /**
+     * Get file validators
+     */
+    public function getConstraints()
+    {
+        return $this->constraints;
     }
     
     /**
@@ -316,18 +371,37 @@ class UploadManager
      */
     public function addFile($file)
     {
-        $upload_path = $this->getAbsoluteTempUploadPath() . '/' . mt_rand(10000, 99999) . '-' . basename($file);
+        // Validate file
+        $collection = new CollectionConstraint(array(
+            'fields' => array(
+                'file' => $this->getConstraints()
+            )
+        ));
         
-        if (is_uploaded_file($file))
+        $errors = $this->getValidator()->validateValue(array(
+            'file' => $file
+        ), $collection);
+        
+        if (count($errors))
         {
+            // There are some errors
+        }
+        
+        // Add file
+        $upload_path = $this->getAbsoluteTempUploadPath() . '/' . mt_rand(10000, 99999) . '-';
+        
+        if ($file instanceof UploadedFile)
+        {
+            $upload_path .= $file->getClientOriginalName();
             move_uploaded_file($file, $upload_path);
         }
         else
         {
+            $upload_path .= basename($file);
             $this->getFilesystem()->copy($file, $upload_path);
         }
         
-        return $this;
+        return basename($upload_path);
     }
     
     /**

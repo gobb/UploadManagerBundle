@@ -49,6 +49,7 @@ class UploadType extends AbstractType
         }
         
         $view->set('upload_url', $options['upload_url'])
+             ->set('upload_actions', $this->container->get('router')->generate('checkdomain_uploadmanager_upload_index'))
              ->set('value', $upload_manager->getUniqueID())
              ->set('files', $upload_manager->getFilesByStatus());
     }

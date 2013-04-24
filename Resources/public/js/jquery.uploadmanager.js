@@ -1,11 +1,13 @@
 (function( $ ) {
     $.fn.uploadmanager = function() {
         this.each(function() {
+            var $this = $(this);
+            
             // Field options
             var o = {
-                unique_id: $(this).val(),
-                upload_url: $(this).attr('data-upload-url'),
-                action_url: '/KoernerWS/UploadManagerBundle/web/app_dev.php/_upload/'
+                unique_id: $this.attr('data-upload-id'),
+                upload_url: $this.attr('data-upload-url'),
+                action_url: $this.attr('data-upload-actions')
             };
 
             // Methods
@@ -26,19 +28,21 @@
                 }
             };
             
-            // Selector shortcut
-            var dui_sel = '[data-upload-id="' + o.unique_id + '"]';
-            
             // Templates
             var t = {
-                existing_item: $('script' + dui_sel + '[data-upload-template="existing-item"]').html(),
-                added_item: $('script' + dui_sel + '[data-upload-template="added-item"]').html(),
-                process_item: $('script' + dui_sel + '[data-upload-template="process-item"]').html(),
-                removed_item: $('script' + dui_sel + '[data-upload-template="removed-item"]').html()
+                existing_item: $('script[data-upload-template="existing-item"]', $this).html(),
+                added_item: $('script[data-upload-template="added-item"]', $this).html(),
+                process_item: $('script[data-upload-template="process-item"]', $this).html(),
+                removed_item: $('script[data-upload-template="removed-item"]', $this).html()
             };
             
+            // Click on upload icon button
+            $('.btn-upload', $this).click(function(){
+                $('input[type="file"]', $this).click();
+            });
+            
             // Changing upload field
-            $('input[type="file"]' + dui_sel).bind('change', function() {
+            $('input[type="file"]', $this).bind('change', function() {
                 if (!this.files){
                     return false; // Empty upload field
                 }
@@ -52,7 +56,7 @@
                     var tpl = m.parseTemplate(t.process_item, this.name, false);
                     
                     // Write template
-                    $('ul' + dui_sel + '[data-upload-list="added"]').append(tpl);
+                    $('ul[data-upload-list="added"]', $this).append(tpl);
                     
                     // Collect data
                     var data = new FormData();
@@ -61,6 +65,7 @@
                     
                     $.ajax({
                         type: 'POST',
+                        dataType: "json",
                         url: o.upload_url,
                         data: data,
                         processData: false,
@@ -79,8 +84,8 @@
                             }
                             return xhr;
                         },
-                        success: function(filename){
-                            var new_tpl = m.parseTemplate(t.added_item, filename);
+                        success: function(data){
+                            var new_tpl = m.parseTemplate(t.added_item, data.filename);
                             tpl.replaceWith(new_tpl);
                         },
                         error: function(xhr, ajaxOptions, thrownError){
@@ -89,10 +94,12 @@
                         }
                     });
                 });
+                
+                $(this).replaceWith($(this).val('').clone(true));
             });
             
             // Existing files
-            $('ul' + dui_sel + '[data-upload-list="existing"]').on('click', 'a[href="#delete"]', function(){
+            $('ul[data-upload-list="existing"]', $this).on('click', 'a[href="#delete"]', function(){
                 var parent = $(this).closest('[data-upload-file]');
                 
                 $.ajax({
@@ -111,16 +118,18 @@
                         parent.remove();
 
                         // Add new item
-                        $('ul' + dui_sel + '[data-upload-list="removed"]').append(tpl);
+                        $('ul[data-upload-list="removed"]', $this).append(tpl);
                     },
-                    error: function() {
-                        
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(thrownError);
                     }
                 });
+                
+                return false;
             });
             
             // Added files
-            $('ul' + dui_sel + '[data-upload-list="added"]').on('click', 'a[href="#delete"]', function(){
+            $('ul[data-upload-list="added"]', $this).on('click', 'a[href="#delete"]', function(){
                 var parent = $(this).closest('[data-upload-file]');
                 
                 $.ajax({
@@ -134,14 +143,16 @@
                     success: function(data) {
                         parent.remove();
                     },
-                    error: function() {
-                        
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(thrownError);
                     }
                 });
+                
+                return false;
             });
             
             // Removed files
-            $('ul' + dui_sel + '[data-upload-list="removed"]').on('click', 'a[href="#restore"]', function(){
+            $('ul[data-upload-list="removed"]', $this).on('click', 'a[href="#restore"]', function(){
                 var parent = $(this).closest('[data-upload-file]');
                 
                 $.ajax({
@@ -160,12 +171,14 @@
                         parent.remove();
 
                         // Add new item
-                        $('ul' + dui_sel + '[data-upload-list="existing"]').append(tpl);
+                        $('ul[data-upload-list="existing"]', $this).append(tpl);
                     },
-                    error: function() {
-                        
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(thrownError);
                     }
                 });
+                
+                return false;
             });
         });
     };

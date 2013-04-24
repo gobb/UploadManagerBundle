@@ -13,6 +13,7 @@ services:
         calls:
             - [ setFilesystem, [ @filesystem ] ]
             - [ setFinder, [ @upload_manager.finder ] ]
+            - [ setValidator, [ @validator ] ]
             - [ setWriteTo, [ %upload_manager.write_to% ] ]
             - [ setUploadPath, [ %upload_manager.upload_path% ] ]
             - [ setTempUploadPath, [ %upload_manager.temp_upload_path% ] ]
