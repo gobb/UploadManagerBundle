@@ -53,6 +53,14 @@ class UploadType extends AbstractType
              ->set('value', $upload_manager->getUniqueID())
              ->set('files', $upload_manager->getFilesByStatus());
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParent()
+    {
+        return 'hidden';
+    }
     
     public function getName()
     {

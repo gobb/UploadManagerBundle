@@ -16,12 +16,13 @@ class DefaultController extends Controller
         
         if ($this->getRequest()->isMethod('POST'))
         {
-            $form->bindRequest($this->getRequest());
-
+            $form->bind($this->getRequest());
+            
             if ($form->isValid())
             {
                 $uploadmanager = $this->get('upload_manager');
-                $uploadmanager->getInstance($form->get('files_unique_id'));
+                $uploadmanager->getInstance($form->get('files_unique_id')->getData());
+                $uploadmanager->synchronise();
                 
                 $message = 'Die Dateien wurden erfolgreich gespeichert!';
             }
