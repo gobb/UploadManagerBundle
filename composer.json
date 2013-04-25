@@ -1,0 +1,24 @@
+{
+    "name": "checkdomain/upload-manager-bundle",
+    "type": "symfony-bundle",
+    "description": "Asynchron multiupload form type and service for Symfony2",
+    "keywords": ["upload", "form", "file", "asynchron"],
+    "homepage": "https://www.checkdomain.de/",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Florian Koerner",
+            "homepage": "https://www.checkdomain.de/"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.3"
+    },
+
+    "autoload": {
+        "psr-0": { "Checkdomain\\UploadManagerBundle": "" }
+    },
+
+    "target-dir": "Checkdomain/UploadManagerBundle"
+}

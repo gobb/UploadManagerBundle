@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * (c) Florian Koerner <f.koerner@checkdomain.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Checkdomain\UploadManagerBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
@@ -11,6 +18,11 @@ use Checkdomain\UploadManagerBundle\Exception\InstanceAlreadyExistsException;
 
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * Upload form field type
+ * 
+ * @author Florian Koerner <f.koerner@checkdomain.de>
+ */
 class UploadType extends AbstractType
 {
     protected $container;

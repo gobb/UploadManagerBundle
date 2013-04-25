@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * (c) Florian Koerner <f.koerner@checkdomain.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Checkdomain\UploadManagerBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -10,7 +17,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-
+/**
+ * The upload controller manages all file actions except the upload action
+ * 
+ * @author Florian Koerner <f.koerner@checkdomain.de>
+ */
 class UploadController extends Controller
 {
     /**
