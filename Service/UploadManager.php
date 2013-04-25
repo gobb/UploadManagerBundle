@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints\Collection as CollectionConstraint;
 
 use Checkdomain\UploadManagerBundle\Exception\InstanceAlreadyExistsException;
 use Checkdomain\UploadManagerBundle\Exception\InstanceNotFoundException;
+use Checkdomain\UploadManagerBundle\Exception\ValidatorException;
 
 class UploadManager
 {
@@ -382,9 +383,10 @@ class UploadManager
             'file' => $file
         ), $collection);
         
+        // Validation failed
         if (count($errors))
         {
-            // There are some errors
+            throw new ValidatorException($errors);
         }
         
         // Add file

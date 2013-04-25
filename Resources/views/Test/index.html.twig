@@ -1,0 +1,20 @@
+{% javascripts
+    'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js'
+    '@CheckdomainUploadManagerBundle/Resources/public/js/*'
+%}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+{% stylesheets
+    '@CheckdomainUploadManagerBundle/Resources/public/css/*'
+%}
+    <link href="{{ asset_url }}" rel="stylesheet" media="screen" />
+{% endstylesheets %}
+
+<h1>Test-Upload</h1>
+
+<form action="" method="post">
+    {{ form_widget(form) }}
+    <hr />
+    <input type="submit" value="Save" />
+</form>

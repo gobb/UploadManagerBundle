@@ -84,9 +84,14 @@
                             }
                             return xhr;
                         },
-                        success: function(data){
-                            var new_tpl = m.parseTemplate(t.added_item, data.filename);
-                            tpl.replaceWith(new_tpl);
+                        success: function(response){
+                            if (jQuery.type(response.errors) !== "undefined") {
+                                alert('- ' + response.errors.join("\n- "));
+                                tpl.remove();
+                            } else {
+                                var new_tpl = m.parseTemplate(t.added_item, response.data);
+                                tpl.replaceWith(new_tpl);
+                            }
                         },
                         error: function(xhr, ajaxOptions, thrownError){
                             alert(thrownError);
@@ -110,15 +115,20 @@
                         action: 'delete_existing',
                         file: parent.attr('data-upload-file')
                     },
-                    success: function(data) {
-                        // Copy attribute and file name
-                        var tpl = m.parseTemplate(t.removed_item, parent.attr('data-upload-file'));
+                    success: function(response) {
+                        if (jQuery.type(response.errors) !== "undefined") {
+                            alert('- ' + response.errors.join("\n- "));
+                            tpl.remove();
+                        } else {
+                            // Copy attribute and file name
+                            var tpl = m.parseTemplate(t.removed_item, parent.attr('data-upload-file'));
 
-                        // Remove old item
-                        parent.remove();
+                            // Remove old item
+                            parent.remove();
 
-                        // Add new item
-                        $('ul[data-upload-list="removed"]', $this).append(tpl);
+                            // Add new item
+                            $('ul[data-upload-list="removed"]', $this).append(tpl);
+                        }
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
                         alert(thrownError);
@@ -140,8 +150,13 @@
                         action: 'delete_added',
                         file: parent.attr('data-upload-file')
                     },
-                    success: function(data) {
-                        parent.remove();
+                    success: function(response) {
+                        if (jQuery.type(response.errors) !== "undefined") {
+                            alert('- ' + response.errors.join("\n- "));
+                            tpl.remove();
+                        } else {
+                            parent.remove();
+                        }
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
                         alert(thrownError);
@@ -163,15 +178,20 @@
                         action: 'restore_deleted',
                         file: parent.attr('data-upload-file')
                     },
-                    success: function(data) {
-                        // Copy attribute and file name
-                        var tpl = m.parseTemplate(t.existing_item, parent.attr('data-upload-file'));
+                    success: function(response) {
+                        if (jQuery.type(response.errors) !== "undefined") {
+                            alert('- ' + response.errors.join("\n- "));
+                            tpl.remove();
+                        } else {
+                            // Copy attribute and file name
+                            var tpl = m.parseTemplate(t.existing_item, parent.attr('data-upload-file'));
 
-                        // Remove old item
-                        parent.remove();
+                            // Remove old item
+                            parent.remove();
 
-                        // Add new item
-                        $('ul[data-upload-list="existing"]', $this).append(tpl);
+                            // Add new item
+                            $('ul[data-upload-list="existing"]', $this).append(tpl);
+                        }
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
                         alert(thrownError);

@@ -1,0 +1,3 @@
+checkdomain_uploadmanager_test:
+    resource: "@CheckdomainUploadManagerBundle/Controller/TestController.php"
+    type: annotation
