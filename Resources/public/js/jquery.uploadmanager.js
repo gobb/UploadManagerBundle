@@ -48,13 +48,9 @@
                 $('input[type="file"]', $this).click();
             });
             
-            // Changing upload field
-            $('input[type="file"]', $this).bind('change', function() {
-                if (!this.files){
-                    return false; // Empty upload field
-                }
-                
-                $.each(this.files, function(){
+            // Upload function
+            var ajax_upload = function (files) {
+                $.each(files, function(){
                     // Create request object
                     var request = new XMLHttpRequest();
                     request.open('POST', o.upload_url, true);
@@ -106,12 +102,39 @@
                         }
                     });
                 });
+            };
+            
+            // Drag and drop
+            $this.bind('dragover', function(evt) {
+                evt.stopPropagation();
+                evt.preventDefault();
+                
+                evt.originalEvent.dataTransfer.dropEffect = 'copy';
+            });
+            
+            $this.bind('drop', function(evt, test) {
+                evt.stopPropagation();
+                evt.preventDefault();
+
+                ajax_upload(evt.originalEvent.dataTransfer.files);
+            });
+            
+            // Changing upload field
+            $('input[type="file"]', $this).bind('change', function(evt) {
+                if (!this.files){
+                    return false; // Empty upload field
+                }
+                
+                ajax_upload(this.files);
                 
                 $(this).replaceWith($(this).val('').clone(true));
+                
+                evt.stopPropagation();
+                evt.preventDefault();
             });
             
             // Existing files
-            $('ul[data-upload-list="existing"]', $this).on('click', 'a[href="#delete"]', function(){
+            $('ul[data-upload-list="existing"]', $this).on('click', 'a[href="#delete"]', function(evt){
                 var parent = $(this).closest('[data-upload-file]');
                 
                 $.ajax({
@@ -142,11 +165,12 @@
                     }
                 });
                 
-                return false;
+                evt.stopPropagation();
+                evt.preventDefault();
             });
             
             // Added files
-            $('ul[data-upload-list="added"]', $this).on('click', 'a[href="#delete"]', function(){
+            $('ul[data-upload-list="added"]', $this).on('click', 'a[href="#delete"]', function(evt){
                 var parent = $(this).closest('[data-upload-file]');
                 
                 $.ajax({
@@ -170,11 +194,12 @@
                     }
                 });
                 
-                return false;
+                evt.stopPropagation();
+                evt.preventDefault();
             });
             
             // Removed files
-            $('ul[data-upload-list="removed"]', $this).on('click', 'a[href="#restore"]', function(){
+            $('ul[data-upload-list="removed"]', $this).on('click', 'a[href="#restore"]', function(evt){
                 var parent = $(this).closest('[data-upload-file]');
                 
                 $.ajax({
@@ -205,7 +230,8 @@
                     }
                 });
                 
-                return false;
+                evt.stopPropagation();
+                evt.preventDefault();
             });
         });
     };

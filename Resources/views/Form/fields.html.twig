@@ -10,9 +10,8 @@
             <li data-upload-file="" class="existing-file clearfix">
                 <div class="file-name"></div>
                 <div class="extended">
-                    <a href="#delete">
+                    <a href="#delete" class="btn btn-mini">
                         <i class="icon-trash"></i>
-                        Delete
                     </a>
                 </div>
             </li>
@@ -21,9 +20,8 @@
             <li data-upload-file="" class="added-file clearfix">
                 <div class="file-name"></div>
                 <div class="extended">
-                    <a href="#delete">
+                    <a href="#delete" class="btn btn-mini">
                         <i class="icon-trash"></i>
-                        Delete
                     </a>
                 </div>
             </li>
@@ -31,7 +29,7 @@
         <script type="text/template" data-upload-template="process-item">
             <li class="process-file clearfix">
                 <div class="file-name"></div>
-                <div class="extended">
+                <div class="extended" class="btn btn-mini">
                     <i class="icon-spinner icon-spin"></i>
                     <span></span>
                 </div>
@@ -41,9 +39,8 @@
             <li data-upload-file="" class="removed-file clearfix">
                 <div class="file-name"></div>
                 <div class="extended">
-                    <a href="#restore">
+                    <a href="#restore" class="btn btn-mini">
                         <i class="icon-reply"></i>
-                        Restore
                     </a>
                 </div>
             </li>
@@ -60,9 +57,8 @@
                         <li data-upload-file="{{ file }}" class="existing-file clearfix">
                             <div class="file-name">{{ file|split('-', 2).1 }}</div>
                             <div class="extended">
-                                <a href="#delete">
+                                <a href="#delete" class="btn btn-mini">
                                     <i class="icon-trash"></i>
-                                    Delete
                                 </a>
                             </div>
                         </li>
@@ -75,9 +71,8 @@
                         <li data-upload-file="{{ file }}" class="added-file clearfix">
                             <div class="file-name">{{ file|split('-', 2).1 }}</div>
                             <div class="extended">
-                                <a href="#delete">
+                                <a href="#delete" class="btn btn-mini">
                                     <i class="icon-trash"></i>
-                                    Delete
                                 </a>
                             </div>
                         </li>
@@ -90,9 +85,8 @@
                         <li data-upload-file="{{ file }}" class="removed-file clearfix">
                             <div class="file-name">{{ file|split('-', 2).1 }}</div>
                             <div class="extended">
-                                <a href="#restore">
+                                <a href="#restore" class="btn btn-mini">
                                     <i class="icon-reply"></i>
-                                    Restore
                                 </a>
                             </div>
                         </li>
