@@ -48,7 +48,7 @@
         
         <a href="javascript:void(0);" class="btn-upload"><i class="icon-folder-open-alt"></i></a>
         <input type="file" id="{{ id }}" {% if disabled %} disabled="disabled"{% endif %} multiple="multiple" />
-        <input type="hidden" name="{{ full_name }}" value="{{ value }}" />
+        <input autocomplete="off" type="hidden" name="{{ full_name }}" value="{{ value }}" />
 
         <ul class="unstyled">
             <li>
