@@ -88,6 +88,12 @@ class TestController extends Controller
             new \Symfony\Component\Validator\Constraints\Image()
         ));
         
+        // Set upload directory, if not set
+        if (!$upload_manager->getDestinationDirectory())
+        {
+            $upload_manager->setDestinationDirectory('test_documents/' . time());
+        }
+        
         // Try to add a file and build response array
         try {
             $response = array(

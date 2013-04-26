@@ -32,7 +32,7 @@ class TestType extends AbstractType
     {
         $builder->add('files_unique_id', 'upload', array(
             'upload_url' => $options['upload_url'],
-            'upload_dir' => '/user/documents/',
+            'upload_dir' => NULL,
             'label'  => 'Your documents',
         ));
     }

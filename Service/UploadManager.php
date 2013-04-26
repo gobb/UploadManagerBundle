@@ -20,6 +20,7 @@ use Symfony\Component\Validator\Constraints\Collection as CollectionConstraint;
 use Checkdomain\UploadManagerBundle\Exception\InstanceAlreadyExistsException;
 use Checkdomain\UploadManagerBundle\Exception\InstanceNotFoundException;
 use Checkdomain\UploadManagerBundle\Exception\ValidatorException;
+use Checkdomain\UploadManagerBundle\Exception\DestinationDirectoryMissingException;
 
 /**
  * UploadManager service class
@@ -281,12 +282,15 @@ class UploadManager
      */
     public function getAbsoluteUploadPath()
     {
-        $data = $this->getData();
+        if (!$this->getDestinationDirectory())
+        {
+            throw new DestinationDirectoryMissingException();
+        }
         
         $dir = implode('/', array(
             $this->getWriteTo(),
             $this->getUploadPath(),
-            $data['dest_directory']
+            $this->getDestinationDirectory()
         ));
         
         if (!is_file($dir))
@@ -374,6 +378,29 @@ class UploadManager
     public function getData()
     {
         return $this->data;
+    }
+    
+    /**
+     * Set destination directory to data array
+     * 
+     * @param string $dest_directory
+     */
+    public function setDestinationDirectory($dest_directory)
+    {
+        $this->setData(array_merge($this->getData(), array(
+            'dest_directory' => $dest_directory
+        )));
+        
+        return $this;
+    }
+    
+    /**
+     * Get destination directory from data array
+     */
+    public function getDestinationDirectory()
+    {
+        $data = $this->getData();
+        return $data['dest_directory'];
     }
     
     /**
@@ -477,6 +504,11 @@ class UploadManager
      */
     public function getFiles()
     {
+        if (!$this->getDestinationDirectory())
+        {
+            return array();
+        }
+        
         $finder = $this->getFinder()
                        ->in($this->getAbsoluteUploadPath())
                        ->depth('< 1')
@@ -541,6 +573,11 @@ class UploadManager
      */
     public function synchronise()
     {
+        if (!$this->getDestinationDirectory())
+        {
+            throw new DestinationDirectoryMissingException();
+        }
+        
         $files = $this->getFilesByStatus();
         $filesystem = $this->getFilesystem();
         
