@@ -29,7 +29,9 @@ class Configuration implements ConfigurationInterface
         $rootNode->children()
                  ->scalarNode('write_to')->defaultValue('%kernel.root_dir%/../web')->end()
                  ->scalarNode('upload_path')->defaultValue('upload')->end()
-                 ->scalarNode('temp_upload_path')->defaultValue('%upload_manager.upload_path%/temp')
+                 ->scalarNode('temp_upload_path')->defaultValue('%upload_manager.upload_path%/temp')->end()
+                 ->integerNode('temp_upload_lifetime')->defaultValue(10800)->end()
+                 ->integerNode('tidy_up_likelihood')->defaultValue(10)->end()
                  ->end();
 
         return $treeBuilder;

@@ -17,3 +17,5 @@ services:
             - [ setWriteTo, [ %upload_manager.write_to% ] ]
             - [ setUploadPath, [ %upload_manager.upload_path% ] ]
             - [ setTempUploadPath, [ %upload_manager.temp_upload_path% ] ]
+            - [ setTempUploadLifetime, [ %upload_manager.temp_upload_lifetime% ] ]
+            - [ setTidyUpLikelihood, [ %upload_manager.tidy_up_likelihood% ] ]

@@ -54,7 +54,9 @@ class UploadManager
     protected $write_to = NULL;
     protected $upload_path = NULL;
     protected $temp_upload_path = NULL;
-    
+    protected $temp_upload_lifetime = NULL;
+    protected $tidy_up_likelihood = NULL;
+
     // Unique upload id
     protected $unique_id = NULL;
     
@@ -84,6 +86,9 @@ class UploadManager
             'dest_directory' => $dest_directory,
             'removed_files' => array()
         ));
+        
+        // Tidy up
+        $this->tidyUpTempDirectory(TRUE);
     }
     
     /**
@@ -101,6 +106,9 @@ class UploadManager
         
         // Set unique id
         $this->setUniqueID($unique_id);
+        
+        // Tidy up
+        $this->tidyUpTempDirectory(TRUE);
     }
     
     /**
@@ -278,6 +286,57 @@ class UploadManager
     }
     
     /**
+     * Set temp upload directory lifetime
+     * 
+     * @param integer $temp_upload_lifetime
+     * @return \Checkdomain\UploadManagerBundle\Service\UploadManager
+     */
+    public function setTempUploadLifetime($temp_upload_lifetime)
+    {
+        $this->temp_upload_lifetime = intval($temp_upload_lifetime);
+        return $this;
+    }
+    
+    /**
+     * Get temp upload directory lifetime
+     * 
+     * @return integer
+     */
+    public function getTempUploadLifetime()
+    {
+        return $this->temp_upload_lifetime;
+    }
+    
+    /**
+     * Set tidy up likelihood P(1/x)
+     * 
+     * @param integer $tidy up_likelihood
+     * @return \Checkdomain\UploadManagerBundle\Service\UploadManager
+     */
+    public function setTidyUpLikelihood($tidy_up_likelihood)
+    {
+        $tidy_up_likelihood = intval($tidy_up_likelihood);
+        
+        if (!$tidy_up_likelihood)
+        {
+            throw new Exception('Please set a tidy up likelihood greater than 0');
+        }
+        
+        $this->tidy_up_likelihood = $tidy_up_likelihood;
+        return $this;
+    }
+    
+    /**
+     * Get tidy up likelihood P(1/x)
+     * 
+     * @return integer
+     */
+    public function getTidyUpLikelihood()
+    {
+        return $this->tidy_up_likelihood;
+    }
+    
+    /**
      * Get absolute path to the upload directory
      */
     public function getAbsoluteUploadPath()
@@ -309,7 +368,7 @@ class UploadManager
         $dir = implode('/', array(
             $this->getWriteTo(),
             $this->getTempUploadPath(),
-            ($unique_id) ?: $this->getUniqueID()
+            ($unique_id !== NULL) ? $unique_id : $this->getUniqueID()
         ));
         
         if (!is_file($dir))
@@ -566,6 +625,48 @@ class UploadManager
             self::FILE_STATUS_REMOVED => array_intersect($removed_files, $files),
             self::FILE_STATUS_ADDED => $added_files,
         );
+    }
+    
+    /**
+     * Tidyup temp directory
+     * 
+     * @param boolean $likelihood
+     * @return boolean
+     */
+    public function tidyUpTempDirectory($likelihood = FALSE)
+    {
+        // Some likelihood calculation
+        if ($likelihood === TRUE && mt_rand(1, $this->getTidyUpLikelihood()) != 1)
+        {
+            return FALSE;
+        }
+        
+        // Get temp upload directory without unique id
+        $dir = $this->getAbsoluteTempUploadPath('');
+        
+        // Get filesystem service
+        $filesystem = $this->getFilesystem();
+        
+        // Get all directories
+        $dirs = $this->getFinder()
+                     ->in($dir)
+                     ->directories();
+        
+        // Collect directories to be deleted
+        $dirs_rm = array();
+        
+        foreach ($dirs AS $dir)
+        {
+            if (time() - $this->getTempUploadLifetime() > filemtime($dir))
+            {
+                $dirs_rm[] = $dir;
+            }
+        }
+        
+        // Remove directories
+        $filesystem->remove($dirs_rm);
+        
+        return TRUE;
     }
     
     /**

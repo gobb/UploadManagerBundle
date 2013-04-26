@@ -32,6 +32,8 @@ class CheckdomainUploadManagerExtension extends Extension
         $container->setParameter('upload_manager.write_to', $config['write_to']);
         $container->setParameter('upload_manager.upload_path', $config['upload_path']);
         $container->setParameter('upload_manager.temp_upload_path', $config['temp_upload_path']);
+        $container->setParameter('upload_manager.temp_upload_lifetime', $config['temp_upload_lifetime']);
+        $container->setParameter('upload_manager.tidy_up_likelihood', $config['tidy_up_likelihood']);
         
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
